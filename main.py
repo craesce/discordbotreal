@@ -22,7 +22,7 @@ async def on_message(message):
     if bot.user.mentioned_in(message):
         await message.channel.send("Typeshit")
         return
-    if "image" in message.content.lower():
+    if "job" in message.content.lower():
            await message.channel.send(
              "https://tenor.com/view/breaking-phone-glep-smiling-friends-destroying-phone-angry-gif-14103972177458051138")
     await bot.process_commands(message)
