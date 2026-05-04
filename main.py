@@ -26,5 +26,17 @@ async def on_message(message):
            await message.channel.send(
              "https://tenor.com/view/breaking-phone-glep-smiling-friends-destroying-phone-angry-gif-14103972177458051138")
     await bot.process_commands(message)
+#python basics
+
+string_number = '69'
+item = 'banana'
+Item = 'Apple'
+list = [1,2,3,4,5,6,7,'piemel','banana'+item+Item]
+
+
+#hangman typeshit
+
+hangman_art = ['o', '|', '/|', '/|\\', '/','\\']
+print(hangman_art)
 
 bot.run(token, log_handler=handler, log_level=logging.DEBUG)
