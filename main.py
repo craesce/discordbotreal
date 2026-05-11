@@ -65,7 +65,7 @@ hangman_art = {
         "/ \\\n")
 }
 
-words = ["banana", "apple", "discord", "python"]
+words = ["banana", "apple", "discord", "python", "penis", "67", "glep", "hurensohn", "typeshit"]
 
 games = {}
 
@@ -85,7 +85,7 @@ async def hangman(ctx):
         "wrong_guesses": 0,
         "letters_guessed": set(),
         "guesses": 0,
-        "hidden_word": ["_"] * len(answer)
+        "hidden_word": ["[ ]"] * len(answer)
     }
 
     await ctx.send(
@@ -95,7 +95,7 @@ async def hangman(ctx):
     )
 
 @bot.command()
-async def hguess(ctx, guessed_letter):
+async def hguess(ctx, guessed_input):
 
     if ctx.author.id not in games:
         await ctx.send("Du hast kein aktives Spiel")
@@ -104,48 +104,80 @@ async def hguess(ctx, guessed_letter):
     game = games[ctx.author.id]
 
     answer = game["answer"]
-    wrong_guesses = game["wrong_guesses"]
     letters_guessed = game["letters_guessed"]
     hidden_word = game["hidden_word"]
 
-    letters_guessed.add(guessed_letter)
+    guessed_input = guessed_input.lower()
 
-    if guessed_letter in answer:
 
-        for i in range(len(answer)):
-            if answer[i] == guessed_letter:
-                hidden_word[i] = guessed_letter
+    if not guessed_input.isalpha():
+        await ctx.send("Nur Buchstaben erlaubt")
+        return
 
-        if checkWinCondition(letters_guessed, answer):
+
+    if len(guessed_input) > 1:
+
+        if guessed_input == answer:
+
             await ctx.send(
-                f"Correct!\n"
-                f"Word: **{answer}**"
+                f"GEWONNEN!\n"
+                f"Das Wort war: **{answer}**"
             )
 
             del games[ctx.author.id]
             return
 
+        else:
+            game["wrong_guesses"] += 1
+
+    #
     else:
-        game["wrong_guesses"] += 1
-        wrong_guesses = game["wrong_guesses"]
 
-    game["guesses"] += 1
+        if guessed_input in letters_guessed:
+            await ctx.send("Schon geraten.")
+            return
 
-    if wrong_guesses >= 6:
+        letters_guessed.add(guessed_input)
+
+        if guessed_input in answer:
+
+            for i in range(len(answer)):
+                if answer[i] == guessed_input:
+                    hidden_word[i] = guessed_input
+
+        else:
+            game["wrong_guesses"] += 1
+
+    wrong_guesses = game["wrong_guesses"]
+
+    #
+    if all(char in letters_guessed for char in answer):
 
         await ctx.send(
-            f"```{hangman_art[6]}```\n"
-            f"Game Over\n"
-            f"Word: **{answer}**"
+            f"GEWONNEN!\n"
+            f"Das Wort war: **{answer}**"
         )
 
         del games[ctx.author.id]
         return
 
+    #
+    if wrong_guesses >= 6:
+
+        await ctx.send(
+            f"```{hangman_art[6]}```\n"
+            f"Game Over\n"
+            f"Wort: **{answer}**"
+        )
+
+        del games[ctx.author.id]
+        return
+
+    #
     await ctx.send(
         f"```{hangman_art[wrong_guesses]}```\n"
         f"{' '.join(hidden_word)}\n"
-        f"Letters guessed: {', '.join(letters_guessed)}"
+        f"Letters guessed: {', '.join(sorted(letters_guessed))}"
     )
 
 bot.run(token, log_handler=handler, log_level=logging.DEBUG)
