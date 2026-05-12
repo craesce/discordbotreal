@@ -42,38 +42,62 @@ async def on_message(message):
 import random
 
 hangman_art = {
-    0: ("   \n"
-        "   \n"
-        "   \n"),
-    1: (" o \n"
-        "   \n"
-        "   \n"),
-    2: (" o \n"
-        " | \n"
-        "   \n"),
-    3: (" o \n"
-        "/| \n"
-        "   \n"),
-    4: (" o \n"
-        "/|\\\n"
-        "   \n"),
-    5: (" o \n"
-        "/|\\\n"
-        "/  \n"),
-    6: (" o \n"
-        "/|\\\n"
-        "/ \\\n")
+    0: (" |\n"
+        " |\n"
+        " |\n"),
+
+    1: (" _______\n"
+        " |/\n"
+        " |\n"
+        " |\n"
+        " |\n"),
+
+    2: (" _______\n"
+        " |/   |\n"
+        " |\n"
+        " |\n"
+        " |\n"),
+
+    3: (" _______\n"
+        " |/   |\n"
+        " |    o\n"
+        " |\n"
+        " |\n"),
+
+    4: (" _______\n"
+        " |/   |\n"
+        " |    o\n"
+        " |    |\n"
+        " |\n"),
+
+    5: (" _______\n"
+        " |/   |\n"
+        " |    o\n"
+        " |   /|\n"
+        " |\n"),
+
+    6: (" _______\n"
+        " |/   |\n"
+        " |    o\n"
+        " |   /|\\\n"
+        " |\n"),
+
+    7: (" _______\n"
+        " |/   |\n"
+        " |    o\n"
+        " |   /|\\\n"
+        " |   /\n"),
+
+    8: (" _______\n"
+        " |/   |\n"
+        " |    o\n"
+        " |   /|\\\n"
+        " |   / \\\n")
 }
 
-words = ["banana", "apple", "discord", "python", "penis", "67", "glep", "hurensohn", "typeshit"]
+words = ["banana", "apple", "discord", "python", "penis", "67", "glep", "typeshit"]
 
 games = {}
-
-def checkWinCondition(letters_guessed, answer):
-    for i in answer:
-        if i not in letters_guessed:
-            return False
-    return True
 
 @bot.command()
 async def hangman(ctx):
@@ -110,11 +134,6 @@ async def hguess(ctx, guessed_input):
     guessed_input = guessed_input.lower()
 
 
-    if not guessed_input.isalpha():
-        await ctx.send("Nur Buchstaben erlaubt")
-        return
-
-
     if len(guessed_input) > 1:
 
         if guessed_input == answer:
@@ -130,7 +149,6 @@ async def hguess(ctx, guessed_input):
         else:
             game["wrong_guesses"] += 1
 
-    #
     else:
 
         if guessed_input in letters_guessed:
@@ -150,7 +168,6 @@ async def hguess(ctx, guessed_input):
 
     wrong_guesses = game["wrong_guesses"]
 
-    #
     if all(char in letters_guessed for char in answer):
 
         await ctx.send(
@@ -161,7 +178,6 @@ async def hguess(ctx, guessed_input):
         del games[ctx.author.id]
         return
 
-    #
     if wrong_guesses >= 6:
 
         await ctx.send(
@@ -173,11 +189,16 @@ async def hguess(ctx, guessed_input):
         del games[ctx.author.id]
         return
 
-    #
     await ctx.send(
         f"```{hangman_art[wrong_guesses]}```\n"
         f"{' '.join(hidden_word)}\n"
         f"Letters guessed: {', '.join(sorted(letters_guessed))}"
     )
+
+@bot.command()
+async def idee(ctx):
+    await ctx.send(
+
+        f"die Idee nieder")
 
 bot.run(token, log_handler=handler, log_level=logging.DEBUG)
