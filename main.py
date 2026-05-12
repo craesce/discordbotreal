@@ -178,7 +178,7 @@ async def hguess(ctx, guessed_input):
         del games[ctx.author.id]
         return
 
-    if wrong_guesses >= 6:
+    if wrong_guesses >= 8:
 
         await ctx.send(
             f"```{hangman_art[6]}```\n"
