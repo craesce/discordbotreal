@@ -24,7 +24,6 @@ async def on_message(message):
         return
     if bot.user.mentioned_in(message):
         await message.channel.send("Typeshit")
-        return
     if "job" in message.content.lower():
            await message.channel.send(
              "https://tenor.com/view/breaking-phone-glep-smiling-friends-destroying-phone-angry-gif-14103972177458051138")
