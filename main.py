@@ -200,4 +200,39 @@ async def idee(ctx):
 
         f"die Idee nieder")
 
+reaction_sessions = {}
+@bot.command()
+async def reaction(ctx):
+
+    embed = discord.Embed(
+        title = "Reaction",
+        description = "React with :cat:"
+    )
+
+    msg = await ctx.send(embed=embed)
+
+    await msg.add_reaction(":cat:")
+
+    reaction_sessions[msg.id] = True
+
+@bot.event()
+async def on_reaction_add(reaction, user):
+
+    if user.bot:
+        return
+
+    message = reaction.message
+
+    if message.id not in reaction_sessions:
+        return
+
+    emoji = str(reaction.emoji)
+
+    responses = {
+        ":cat:": "C:\Users\KleinCh\PycharmProjects\clean-repo\img\rosi.jpg"
+    }
+
+    if emoji in responses:
+        await message.channel.send(responses[emoji])
+
 bot.run(token, log_handler=handler, log_level=logging.DEBUG)
